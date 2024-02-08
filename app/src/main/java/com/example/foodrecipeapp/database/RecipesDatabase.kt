@@ -15,7 +15,7 @@ import com.example.foodrecipeapp.entity.converter.CategoryListConverter
 import com.example.foodrecipeapp.entity.converter.MealListConverter
 
 @Database(entities = [Recipes::class,Category::class,CategoryItems::class,
-                     Meal::class,MealsItem::class], version = 4)
+                     Meal::class,MealsItem::class], version = 5, exportSchema = false)
 @TypeConverters(CategoryListConverter::class,MealListConverter::class)
 abstract class RecipesDatabase:RoomDatabase() {
     abstract fun getRecipesDao():RecipesDao

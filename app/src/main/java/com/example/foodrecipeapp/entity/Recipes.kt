@@ -5,6 +5,7 @@ import androidx.room.PrimaryKey
 
 @Entity("RECIPES_TABLE")
 data class Recipes @JvmOverloads constructor(
-    @PrimaryKey(autoGenerate = true) val id:Int?=0,
+    @PrimaryKey(autoGenerate = true)
+    val id:Int?=0,
     var dishName:String?=null
 )

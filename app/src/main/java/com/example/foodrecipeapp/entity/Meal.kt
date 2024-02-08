@@ -17,6 +17,4 @@ data class Meal @JvmOverloads constructor(
 	@SerializedName("meals")
 	@TypeConverters(MealListConverter::class)
 	val meals: List<MealsItem?> ?=null
-){
-	constructor():this(0, emptyList())
-}
+)

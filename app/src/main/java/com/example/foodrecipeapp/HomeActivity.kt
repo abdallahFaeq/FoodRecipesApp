@@ -62,7 +62,7 @@ class HomeActivity : BaseActivity() {
         binding.tvCategory.text = "$categoryName category"
         launch {
             this.let {
-                var meals = RecipesDatabase
+                val meals = RecipesDatabase
                     .getRecipesDBInstance(this@HomeActivity)
                     .getRecipesDao()
                     .getSpecificMealsList(categoryName)

@@ -19,7 +19,7 @@ interface RecipesDao {
     suspend fun insertCategory(categoryItems:CategoryItems)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertMeal(mealItems:MealsItem?)
+    suspend fun insertMeal(mealItems:MealsItem)
 
     @Query("DELETE FROM CategoryItems")
     suspend fun clearDB()
@@ -28,5 +28,5 @@ interface RecipesDao {
     suspend fun clearMealDB()
 
     @Query("select * from MEAL_ITEMS_TABLE where categoryName like :categoryName order by id desc")
-    suspend fun getSpecificMealsList(categoryName:String)
+    suspend fun getSpecificMealsList(categoryName:String): List<MealsItem>
 }

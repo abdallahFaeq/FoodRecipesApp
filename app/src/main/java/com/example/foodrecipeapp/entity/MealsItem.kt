@@ -28,6 +28,4 @@ data class MealsItem @JvmOverloads constructor(
 
 	@ColumnInfo("categoryName")
 	val categoryName:String?=null,
-){
-	constructor():this(0,"","","","")
-}
+)
