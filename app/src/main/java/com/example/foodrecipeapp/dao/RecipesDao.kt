@@ -24,9 +24,8 @@ interface RecipesDao {
     @Query("DELETE FROM CategoryItems")
     suspend fun clearDB()
 
-    @Query("DELETE FROM MEAL_ITEMS_TABLE")
-    suspend fun clearMealDB()
-
+    @Query("delete from MEAL_ITEMS_TABLE")
+    suspend fun clearMealItemDB()
     @Query("select * from MEAL_ITEMS_TABLE where categoryName like :categoryName order by id desc")
-    suspend fun getSpecificMealsList(categoryName:String): List<MealsItem>
+    suspend fun getSpecificMealsList(categoryName:String):List<MealsItem>
 }

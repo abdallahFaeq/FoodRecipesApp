@@ -12,15 +12,11 @@ import com.example.foodrecipeapp.databinding.ItemRvMainCategoryBinding
 import com.example.foodrecipeapp.entity.CategoryItems
 import com.example.foodrecipeapp.entity.Recipes
 
-class MainCategoryAdapter(var mainCategoryItems: List<CategoryItems>) :
-    Adapter<MainCategoryAdapter.MainCategoryHolder>() {
-    private var context: Context? = null
+class MainCategoryAdapter(var mainCategoryItems:List<CategoryItems>):Adapter<MainCategoryAdapter.MainCategoryHolder>() {
+    private var context:Context?=null
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainCategoryHolder {
         this.context = parent.context
-        return MainCategoryHolder(
-            LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_rv_main_category, parent, false)
-        )
+        return MainCategoryHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_rv_main_category,parent,false))
     }
 
     override fun getItemCount(): Int = mainCategoryItems.size
@@ -31,25 +27,22 @@ class MainCategoryAdapter(var mainCategoryItems: List<CategoryItems>) :
         holder.binding.tvDishName.text = mainCategoryItem.strcategory
         Glide.with(context!!).load(mainCategoryItem.strcategorythumb).into(holder.binding.imageDish)
 
-        if (onItemClickListener != null) {
-            holder.binding.root.setOnClickListener {
-                mainCategoryItem.strcategory?.let { it1 -> onItemClickListener!!.onItemClick(it1) }
-            }
+        if (onItemClickListener != null){
+            holder.binding.root.setOnClickListener({
+                onItemClickListener!!.onItemClick(mainCategoryItem.strcategory!!)
+            })
         }
     }
-
-    fun setMainCategories(mainCategoryItems: List<CategoryItems>) {
+    fun setMainCategories(mainCategoryItems: List<CategoryItems>){
         this.mainCategoryItems = mainCategoryItems
         notifyDataSetChanged()
     }
-
-    class MainCategoryHolder(itemView: View) : ViewHolder(itemView) {
+    class MainCategoryHolder(itemView:View):ViewHolder(itemView){
         var binding = ItemRvMainCategoryBinding.bind(itemView)
     }
 
-    var onItemClickListener: OnItemClickListener? = null
-
-    interface OnItemClickListener {
-        fun onItemClick(categoryName: String)
+    var onItemClickListener:OnItemClickListener ?= null
+    interface OnItemClickListener{
+        fun onItemClick(categoryName:String)
     }
 }

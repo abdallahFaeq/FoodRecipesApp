@@ -1,8 +1,13 @@
 package com.example.foodrecipeapp
 
+import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import com.example.foodrecipeapp.database.RecipesDatabase
@@ -24,6 +29,8 @@ class SplashActivity : BaseActivity(),EasyPermissions.PermissionCallbacks {
     companion object{
         const val READ_STORAGE_REQUEST_CODE = 1
     }
+
+    private val TAG = "SplashActivity"
     lateinit var binding:ActivitySplashBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,11 +43,6 @@ class SplashActivity : BaseActivity(),EasyPermissions.PermissionCallbacks {
     }
 
     private fun goToHomeActivity() {
-        // visibility of views
-        if (binding.buttonGetStarted.visibility == View.INVISIBLE){
-            binding.buttonGetStarted.visibility = View.VISIBLE
-            binding.loader.visibility = View.GONE
-        }
         // when click button get started
         binding.buttonGetStarted.setOnClickListener({
             startHomeActivity()
@@ -53,10 +55,12 @@ class SplashActivity : BaseActivity(),EasyPermissions.PermissionCallbacks {
     }
 
     fun getCategories(){
+        binding.buttonGetStarted.visibility = View.INVISIBLE
+        binding.loader.visibility = View.VISIBLE
         val call = RetrofitClientInstance.categoryService.getCategoryList()
         call.enqueue(object :Callback<Category>{
             override fun onResponse(call: Call<Category>, response: Response<Category>) {
-                for (arr in response.body()!!.categorieitems!!){
+                for (arr in response.body()?.categorieitems!!){
                     getMeals(arr.strcategory)
                 }
                 insertDataIntoDB(response.body())
@@ -64,6 +68,7 @@ class SplashActivity : BaseActivity(),EasyPermissions.PermissionCallbacks {
 
             override fun onFailure(call: Call<Category>, t: Throwable) {
                 binding.loader.visibility = View.GONE
+                binding.buttonGetStarted.visibility = View.GONE
                 Toast.makeText(this@SplashActivity,"something went wrong",Toast.LENGTH_SHORT).show()
             }
         })
@@ -84,13 +89,12 @@ class SplashActivity : BaseActivity(),EasyPermissions.PermissionCallbacks {
 
     private fun insertDataIntoDB(categories:Category?) {
         launch {
-            // clear db
-            clearDb()
-
-            for (arr in categories!!.categorieitems!!){
+            for (arr in categories?.categorieitems!!){
                 RecipesDatabase.getRecipesDBInstance(this@SplashActivity)
                     .getRecipesDao()
                     .insertCategory(arr)
+
+                Log.d(TAG, "insertDataIntoDB: $arr")
             }
             binding.buttonGetStarted.visibility = View.VISIBLE
         }
@@ -98,16 +102,13 @@ class SplashActivity : BaseActivity(),EasyPermissions.PermissionCallbacks {
 
     private fun insertMealDataIntoDB(categoryName: String?,meal:Meal?) {
         launch {
-            // clear db
-            clearMealDb()
-
             for (arr in meal!!.meals!!){
                 var mealItems = MealsItem(
                     0,
                     arr!!.strMeal,
                     arr!!.strMealThumb,
                     arr!!.idMeal,
-                    categoryName
+                    categoryName!!
                 )
                 RecipesDatabase.getRecipesDBInstance(this@SplashActivity)
                     .getRecipesDao()
@@ -127,21 +128,26 @@ class SplashActivity : BaseActivity(),EasyPermissions.PermissionCallbacks {
             }
         }
     }
-
-    fun clearMealDb(){
+    fun clearMealItems(){
         launch {
             this.let {
                 RecipesDatabase
                     .getRecipesDBInstance(this@SplashActivity)
                     .getRecipesDao()
-                    .clearMealDB()
+                    .clearMealItemDB()
             }
         }
     }
-
     fun readStorageTask(){
         if (checkPermission()){
-            getCategories()
+            if (isConnectedToInternet()){
+                clearDb()
+                clearMealItems()
+                getCategories()
+            }else{
+                binding.buttonGetStarted.visibility = View.VISIBLE
+                binding.loader.visibility = View.GONE
+            }
         }else{
             EasyPermissions.requestPermissions(
                 this,
@@ -149,6 +155,21 @@ class SplashActivity : BaseActivity(),EasyPermissions.PermissionCallbacks {
                 READ_STORAGE_REQUEST_CODE,
                 android.Manifest.permission.READ_EXTERNAL_STORAGE
             )
+        }
+    }
+
+    // check if internet connected or not
+    private fun isConnectedToInternet():Boolean {
+        var connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            var network = connectivityManager.activeNetwork ?: return false
+            var networkCapabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
+            return networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
+                    networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)||
+                    networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)
+        }else{
+            var networkInfo = connectivityManager.activeNetworkInfo
+            return networkInfo != null && networkInfo.isConnected
         }
     }
 

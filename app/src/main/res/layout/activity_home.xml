@@ -29,7 +29,7 @@
             app:cardCornerRadius="@dimen/_10sdp"
             app:cardElevation="@dimen/_10sdp"
             app:layout_constraintTop_toBottomOf="@id/all_recipes_label">
-            <SearchView
+            <androidx.appcompat.widget.SearchView
                 android:id="@+id/search_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -46,7 +46,7 @@
             android:layout_margin="@dimen/_10sdp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:orientation="horizontal"
-            tools:itemCount="1"
+            tools:itemCount="3"
             tools:listitem="@layout/item_rv_main_category"
             app:layout_constraintTop_toBottomOf="@id/car_search_view"/>
         <TextView
@@ -55,7 +55,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/gilroy_bold"
             android:paddingStart="@dimen/_10sdp"
-            android:text="Category name"
+            tools:text="Category name"
             android:textColor="@color/black"
             android:textSize="@dimen/_15ssp"
             app:layout_constraintTop_toBottomOf="@id/rv_main_category"/>
@@ -66,7 +66,7 @@
             android:layout_margin="@dimen/_10sdp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:orientation="horizontal"
-            tools:itemCount="1"
+            tools:itemCount="3"
             tools:listitem="@layout/item_rv_sub_category"
             app:layout_constraintTop_toBottomOf="@id/tvCategory"/>
     </androidx.constraintlayout.widget.ConstraintLayout>

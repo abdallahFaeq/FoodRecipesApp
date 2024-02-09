@@ -64,6 +64,9 @@ dependencies {
     // circle image
     implementation ("de.hdodenhof:circleimageview:3.1.0")
 
+    // roundend image library
+    implementation ("com.makeramen:roundedimageview:2.3.0")
+
     // scalable size unit
     implementation ("com.intuit.sdp:sdp-android:1.1.0")
     // scalable size unit for texts

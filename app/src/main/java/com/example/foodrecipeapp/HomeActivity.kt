@@ -1,7 +1,9 @@
 package com.example.foodrecipeapp
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import com.example.foodrecipeapp.adapter.MainCategoryAdapter
 import com.example.foodrecipeapp.adapter.SubCategoryAdapter
 import com.example.foodrecipeapp.database.RecipesDatabase
@@ -15,7 +17,7 @@ class HomeActivity : BaseActivity() {
     lateinit var binding: ActivityHomeBinding
     lateinit var mainCategoryAdapter: MainCategoryAdapter
     lateinit var subCategoryAdapter: SubCategoryAdapter
-
+    private val TAG = "HomeActivity"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
@@ -27,12 +29,8 @@ class HomeActivity : BaseActivity() {
 
     }
 
-    private fun setupViews() {
-        mainCategoryAdapter = MainCategoryAdapter(listOf())
-        subCategoryAdapter = SubCategoryAdapter(listOf())
-
-        binding.rvMainCategory.adapter = mainCategoryAdapter
-        binding.rvSubCategory.adapter = subCategoryAdapter
+    override fun onStart() {
+        super.onStart()
 
         mainCategoryAdapter.onItemClickListener = object :MainCategoryAdapter.OnItemClickListener{
             override fun onItemClick(categoryName: String) {
@@ -40,6 +38,28 @@ class HomeActivity : BaseActivity() {
             }
 
         }
+
+        subCategoryAdapter.onSubItemClickListener = object : SubCategoryAdapter.OnSubItemClickListener{
+            override fun onSubItemClick(id:String) {
+                goToDetailsActivity(id)
+            }
+
+        }
+    }
+
+    private fun goToDetailsActivity(id:String) {
+        // explicit intent
+        var intent = Intent(this@HomeActivity,DetailsActivity::class.java)
+        intent.putExtra(TAG,id)
+        startActivity(intent)
+    }
+
+    private fun setupViews() {
+        mainCategoryAdapter = MainCategoryAdapter(listOf())
+        subCategoryAdapter = SubCategoryAdapter(listOf())
+
+        binding.rvMainCategory.adapter = mainCategoryAdapter
+        binding.rvSubCategory.adapter = subCategoryAdapter
 
     }
 
@@ -51,9 +71,10 @@ class HomeActivity : BaseActivity() {
                     .getRecipesDao()
                     .getAllCategories()
 
-                getSpecificMealsFromDB((categories as ArrayList<CategoryItems>)[0].strcategory!!)
-
-                mainCategoryAdapter.setMainCategories(categories as ArrayList<CategoryItems>)
+                var categoriesList = categories as ArrayList<CategoryItems>
+                Toast.makeText(this@HomeActivity,"size is ${categoriesList.size}",Toast.LENGTH_SHORT).show()
+                getSpecificMealsFromDB(categoriesList[0].strcategory)
+                mainCategoryAdapter.setMainCategories(categoriesList)
             }
         }
     }

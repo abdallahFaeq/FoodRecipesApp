@@ -28,6 +28,12 @@ class SubCategoryAdapter(var subRecipes:List<MealsItem>):Adapter<SubCategoryAdap
         var mainRecipe = subRecipes[holder.adapterPosition]
         holder.binding.tvDishName.text = mainRecipe.strMeal
         Glide.with(this.context!!).load(mainRecipe.strMealThumb).into(holder.binding.imgDish)
+
+        if (onSubItemClickListener != null){
+            holder.itemView.setOnClickListener({
+                onSubItemClickListener?.onSubItemClick(mainRecipe.idMeal)
+            })
+        }
     }
 
     fun setMealsData(newMeals:List<MealsItem>){
@@ -35,6 +41,10 @@ class SubCategoryAdapter(var subRecipes:List<MealsItem>):Adapter<SubCategoryAdap
         notifyDataSetChanged()
     }
 
+    var onSubItemClickListener : OnSubItemClickListener? =null
+    interface OnSubItemClickListener{
+        fun onSubItemClick(id:String)
+    }
     class SubCategoryHolder(itemView:View):ViewHolder(itemView){
         var binding = ItemRvSubCategoryBinding.bind(itemView)
     }

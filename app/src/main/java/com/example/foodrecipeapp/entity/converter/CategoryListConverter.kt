@@ -8,7 +8,7 @@ import com.google.gson.reflect.TypeToken
 class CategoryListConverter {
 
     @TypeConverter
-    fun fromListCategory(categories:List<CategoryItems>):String?{
+    fun fromListCategory(categories:List<CategoryItems>?):String?{
         if (categories == null){
             return null
         }else{
@@ -20,7 +20,7 @@ class CategoryListConverter {
         }
     }
     @TypeConverter
-    fun toCategoryList(categoryString:String):List<CategoryItems>?{
+    fun toCategoryList(categoryString:String?):List<CategoryItems>?{
         if (categoryString == null){
             return null
         }else{

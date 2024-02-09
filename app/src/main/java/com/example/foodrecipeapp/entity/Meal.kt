@@ -9,8 +9,8 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
 @Entity(tableName = "MEAL_TABLE")
-data class Meal @JvmOverloads constructor(
-	@PrimaryKey(autoGenerate = true) var id:Int ?= 0,
+data class Meal(
+	@PrimaryKey(autoGenerate = true) var id:Int,
 
 	@ColumnInfo("meals")
 	@Expose

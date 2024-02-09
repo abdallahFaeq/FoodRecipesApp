@@ -7,25 +7,25 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
 @Entity(tableName = "MEAL_ITEMS_TABLE")
-data class MealsItem @JvmOverloads constructor(
+data class MealsItem(
 	@PrimaryKey(autoGenerate = true)
-	var id:Int? = 0,
+	var id:Int,
 
 	@ColumnInfo("strMeal")
 	@Expose
 	@SerializedName("strMeal")
-	val strMeal: String? =null,
+	val strMeal: String,
 
 	@ColumnInfo("strMealThumb")
 	@Expose
 	@SerializedName("strMealThumb")
-	val strMealThumb: String?=null,
+	val strMealThumb: String,
 
 	@ColumnInfo("idMeal")
 	@Expose
 	@SerializedName("idMeal")
-	val idMeal: String? =null,
+	val idMeal: String,
 
 	@ColumnInfo("categoryName")
-	val categoryName:String?=null,
+	val categoryName:String,
 )
